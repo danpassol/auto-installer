@@ -10,18 +10,28 @@ set -e
 set -o pipefail
 
 run_cmd() {
-    if [[ "$VERBOSE" == "true" ]]; then
-        eval "$1"
-    else
-        eval "$1" &> /dev/null
-    fi
+    local cmd="$1"
 
-    if [[ $? -ne 0 ]]; then
-        log_error "Command failed: $1"
+    if [[ "$VERBOSE" == "true" ]]; then
+        eval "$cmd"
+        if [[ $? -ne 0 ]]; then
+            log_error "Command failed: $cmd"
+        else
+            log_success "Command succeeded: $cmd"
+        fi
     else
-        log_success "Command succeeded $1"
+        start_spinner
+        eval "$cmd" &> /dev/null
+        local exit_code=$?
+        stop_spinner
+        if [[ $exit_code -ne 0 ]]; then
+            log_error "Command failed: $cmd"
+        else
+            log_success ""
+        fi
     fi
 }
+
 
 # ======= Check if Docker is already installed =======
 
