@@ -34,8 +34,6 @@ start_spinner() {
 
 stop_spinner() {
     if $spinner_active && [[ -n "$spinner_pid" ]]; then
-        kill "$spinner_pid" 2&1>/dev/null
-        wait "$spinner_pid" 2>/dev/null
         spinner_active=false
         spinner_pid=""
         tput cnorm  # Show cursor
