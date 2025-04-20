@@ -10,28 +10,18 @@ set -e
 set -o pipefail
 
 run_cmd() {
-    local cmd="$1"
-    local exit_code
-
     if [[ "$VERBOSE" == "true" ]]; then
-        eval "$cmd"
-        exit_code=$?
-        if [[ $exit_code -ne 0 ]]; then
-            log_error "Command failed: $cmd"
-        else
-            log_success "Command succeeded: $cmd"
-        fi
+        eval "$1"
     else
-        eval "$cmd" &> /dev/null
-        exit_code=$?
-        if [[ $exit_code -ne 0 ]]; then
-            log_error "Command failed: $cmd"
-        else
-            log_success "Command completed!"
-        fi
+        eval "$1" &> /dev/null
+    fi
+
+    if [[ $? -ne 0 ]]; then
+        log_error "Command failed: $1"
+    else
+        log_success "Command succeeded $1"
     fi
 }
-
 
 # ======= Check if Docker is already installed =======
 
@@ -62,21 +52,21 @@ fi
 
 log_step "[STEP 1] Installing dependencies..."
 
-run_cmd "sudo apt update"
+run_cmd "apt update"
 
-run_cmd "sudo apt install -y ca-certificates curl gnupg lsb-release"
+run_cmd "apt install -y ca-certificates curl gnupg lsb-release"
 
 log_step "[STEP 2] Setting up Docker GPG and repo..."
 
-run_cmd "sudo install -m 0755 -d /etc/apt/keyrings"
-run_cmd "sudo curl -fsSL https://download.docker.com/linux/$DISTRO/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
-run_cmd "sudo chmod a+r /etc/apt/keyrings/docker.gpg"
+run_cmd "install -m 0755 -d /etc/apt/keyrings"
+run_cmd "curl -fsSL https://download.docker.com/linux/$DISTRO/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
+run_cmd "chmod a+r /etc/apt/keyrings/docker.gpg"
 
-run_cmd "sudo echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$DISTRO $VERSION_CODENAME stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null"
+run_cmd "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$DISTRO $VERSION_CODENAME stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null"
 
 log_step "[STEP 3] Updating apt and verifying Docker repo..."
 
-APT_OUTPUT=$(sudo apt update 2>&1)
+APT_OUTPUT=$(apt update 2>&1)
 echo "$APT_OUTPUT" | grep -q "download.docker.com"
 
 if [[ $? -eq 0 ]]; then
@@ -87,11 +77,11 @@ fi
 
 log_step "[STEP 4] Installing Docker..."
 
-run_cmd "sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+run_cmd "apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
 
 log_step "[STEP 5] Verifying Docker installation..."
 
-run_cmd "sudo docker --version"
+run_cmd "docker --version"
 
 log_success "Docker installation completed successfully!"
 
@@ -100,8 +90,8 @@ read -p $'\e[34m[QUESTION]\e[0m Do you want to install Portainer (Docker UI)? [y
 if [[ "$install_portainer" =~ ^[Yy]$ ]]; then
     log_info "Installing Portainer..."
     
-    run_cmd "sudo docker volume create portainer_data"
-    run_cmd "sudo docker run -d -p 9000:9000 -p 9443:9443 \
+    run_cmd "docker volume create portainer_data"
+    run_cmd "docker run -d -p 9000:9000 -p 9443:9443 \
         --name portainer \
         --restart=always \
         -v /var/run/docker.sock:/var/run/docker.sock \

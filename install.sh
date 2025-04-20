@@ -28,12 +28,11 @@ if (( selection == ${#INSTALLERS[@]} + 1 )); then
     exit 0
 fi
 
+read -p $'\e[34m[QUESTION]\e[0m Enable verbose output? [y/N]: ' verbose_choice
+[[ "$verbose_choice" =~ ^[Yy]$ ]] && VERBOSE=true
 
 # ======= Run the selected installer =======
 if [[ "$selection" -ge 1 && "$selection" -lt "$i" ]]; then
-    read -p $'\e[34m[QUESTION]\e[0m Enable verbose output? [y/N]: ' verbose_choice
-    [[ "$verbose_choice" =~ ^[Yy]$ ]] && VERBOSE=true
-    
     selected_file="${INSTALLERS[$((selection-1))]}"
     log_info "Running installer: $selected_file"
     chmod +x "$selected_file"
