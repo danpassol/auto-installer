@@ -43,7 +43,7 @@ Before running the installer, ensure the following:
    git clone https://github.com/danpassol/auto-installer.git
    cd auto-installer
    chmod +x install.sh
-   ./install.sh
+   sudo ./install.sh
    ```
 
 made with ❤️ by Dani Pastor

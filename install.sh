@@ -7,6 +7,13 @@ INSTALLERS=()
 # ======= Include common library =======
 source "$(dirname "$0")/.installers/.lib.sh"
 
+# ======= Check if running with sudo =======
+if [[ "$EUID" -ne 0 ]]; then
+    echo -e "\n\033[1;31m[ERROR]\033[0m This script must be run with sudo or as root."
+    echo -e "Please run: \033[1;33msudo $0\033[0m"
+    exit 1
+fi
+
 # ======= Show menu =======
 echo -e "\e[38;5;214m===== Installer Menu =====\e[0m"
 
