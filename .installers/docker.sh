@@ -11,23 +11,23 @@ set -o pipefail
 
 run_cmd() {
     local cmd="$1"
+    local exit_code
 
     if [[ "$VERBOSE" == "true" ]]; then
         eval "$cmd"
-        if [[ $? -ne 0 ]]; then
+        exit_code=$?
+        if [[ $exit_code -ne 0 ]]; then
             log_error "Command failed: $cmd"
         else
             log_success "Command succeeded: $cmd"
         fi
     else
-        start_spinner
         eval "$cmd" &> /dev/null
-        local exit_code=$?
-        stop_spinner
+        exit_code=$?
         if [[ $exit_code -ne 0 ]]; then
             log_error "Command failed: $cmd"
         else
-            log_success ""
+            log_success "Command completed!"
         fi
     fi
 }
