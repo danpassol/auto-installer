@@ -9,7 +9,6 @@ This project provides a streamlined way to install and configure essential tools
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Usage](#usage)
-- [Included Installers](#included-installers)
 - [Project Structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
@@ -45,5 +44,37 @@ Before running the installer, ensure the following:
    chmod +x install.sh
    sudo ./install.sh
    ```
+2. Follow the interactive menu to select the tools and services you want to install.
+3. Optionally, enable verbose mode for detailed output by selecting the appropriate option in the menu.
+
+## 📂 Project Structure
+
+The repository is organized as follows:
+
+```
+auto-installer/
+├── install.sh          # Main script to run the installer
+├── .installers/        # Directory containing modular installer scripts
+├── README.md           # Project documentation
+├── LICENSE             # License file
+└── utils/              # Utility scripts and helper functions
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Commit your changes with clear and concise messages.
+4. Submit a pull request with a detailed description of your changes.
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 made with ❤️ by Dani Pastor
